@@ -34,6 +34,15 @@ pub const JARVIS_JUDICE_NINKE: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     ],
 };
 
+// https://hbfs.wordpress.com/2013/12/31/dithering/
+pub const PIGEON: DiffusionMatrixImpl<2, 4> = DiffusionMatrixImpl {
+    offset: -2,
+    weights: [
+        [None, None, None, Some(7.0 / 16.0)],
+        [Some(1.0 / 16.0), Some(3.0 / 16.0), Some(5.0 / 16.0), None],
+    ],
+};
+
 // https://doi-org.tudelft.idm.oclc.org/10.1117/12.236968
 pub const SHIAU_FAN: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     offset: -2,
