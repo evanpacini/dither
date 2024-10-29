@@ -122,14 +122,14 @@ pub fn error_diffusion_quantise(img: &DynamicImage, matrix: &dyn DiffusionMatrix
             let error = old_pixel - new_pixel;
             img.put_pixel(x, y, Luma([new_pixel]));
             for (dx, dy, weight) in matrix.enumerate() {
-                let nx = x as i32 + dx;
+                let nx = x.wrapping_add_signed(dx);
                 let ny = y + dy;
-                if nx < 0 || !img.in_bounds(nx as u32, ny) {
+                if !img.in_bounds(nx, ny) {
                     continue;
                 }
-                let pixel = img.get_pixel(nx as u32, ny).0[0];
+                let pixel = img.get_pixel(nx, ny).0[0];
                 let new_pixel = pixel + error * weight;
-                img.put_pixel(nx as u32, ny, Luma([new_pixel]));
+                img.put_pixel(nx, ny, Luma([new_pixel]));
             }
         }
     }
