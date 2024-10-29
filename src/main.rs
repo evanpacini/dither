@@ -45,14 +45,14 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Error diffusion and save
     let diffusion_matrices: [(&str, &dyn dither::DiffusionMatrix); 8] = [
-        ("atkinson", &dither::ATKINSON),
-        ("burkes", &dither::BURKES),
-        ("floyd_steinberg", &dither::FLOYD_STEINBERG),
-        ("jarvis_judice_ninke", &dither::JARVIS_JUDICE_NINKE),
-        ("sierra", &dither::SIERRA),
-        ("sierra_two_row", &dither::SIERRA_TWO_ROW),
-        ("sierra_lite", &dither::SIERRA_LITE),
-        ("stucki", &dither::STUCKI)
+        ("atkinson", &dither::diffusion_matrices::ATKINSON),
+        ("burkes", &dither::diffusion_matrices::BURKES),
+        ("floyd_steinberg", &dither::diffusion_matrices::FLOYD_STEINBERG),
+        ("jarvis_judice_ninke", &dither::diffusion_matrices::JARVIS_JUDICE_NINKE),
+        ("sierra", &dither::diffusion_matrices::SIERRA),
+        ("sierra_two_row", &dither::diffusion_matrices::SIERRA_TWO_ROW),
+        ("sierra_lite", &dither::diffusion_matrices::SIERRA_LITE),
+        ("stucki", &dither::diffusion_matrices::STUCKI),
     ];
     for (name, matrix) in diffusion_matrices {
         let err_img = dither::error_diffusion_quantise(&in_img, matrix);
