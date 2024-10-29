@@ -14,11 +14,7 @@ pub struct DiffusionMatrixImpl<const M: usize, const N: usize> {
 
 impl<const M: usize, const N: usize> DiffusionMatrix for DiffusionMatrixImpl<M, N> {
     fn enumerate(&self) -> Box<dyn EnumerateDiffusionMatrix + '_> {
-        Box::new(EnumerateDiffusionMatrixImpl {
-            matrix: self,
-            x: 0,
-            y: 0,
-        })
+        Box::new(EnumerateDiffusionMatrixImpl { matrix: self, x: 0, y: 0 })
     }
 }
 // END: Diffusion matrix trait and implementations
@@ -52,7 +48,9 @@ impl<const M: usize, const N: usize> EnumerateDiffusionMatrixImpl<'_, M, N> {
     }
 }
 
-impl<const M: usize, const N: usize> EnumerateDiffusionMatrix for EnumerateDiffusionMatrixImpl<'_, M, N> {
+impl<const M: usize, const N: usize> EnumerateDiffusionMatrix
+for EnumerateDiffusionMatrixImpl<'_, M, N>
+{
     fn next_a(&mut self) -> Option<(i32, u32, f32)> {
         loop {
             if self.y >= M {
@@ -76,7 +74,7 @@ pub fn threshold_quantise(img: &DynamicImage) -> GrayImage {
     for pixel in img.pixels_mut() {
         pixel.0[0] = if pixel.0[0] < 32768 { 0 } else { 65535 };
     }
-    DynamicImage::ImageLuma16(img).into_luma8()
+    DynamicImage::ImageLuma16(img).to_luma8()
 }
 
 /// Quantise an image to binary (black and white) using a random threshold. (Random dithering)
@@ -93,14 +91,19 @@ pub fn random_dither_quantise(img: &DynamicImage) -> GrayImage {
 pub fn ign_quantise(img: &DynamicImage) -> GrayImage {
     let mut img = img.to_luma16();
     for (x, y, pixel) in img.enumerate_pixels_mut() {
-        let threshold = ((52.9829189 * ((0.06711056 * x as f32) + (0.00583715 * y as f32)) % 1.0) % 1.0 * 65535.0).round() as u16;
+        let threshold =
+            ((52.9829189 * 0.06711056_f32.mul_add(x as f32, 0.00583715 * y as f32).fract()).fract()
+                * 65535.0)
+                .round() as u16;
         pixel.0[0] = if pixel.0[0] < threshold { 0 } else { 65535 };
     }
     DynamicImage::ImageLuma16(img).to_luma8()
 }
 
 /// Quantise an image to binary (black and white) using ordered dithering.
-pub fn ordered_dither_quantise(img: &DynamicImage, matrix: &ImageBuffer<Luma<u16>, Vec<u16>>) -> GrayImage {
+pub fn ordered_dither_quantise(
+    img: &DynamicImage, matrix: &ImageBuffer<Luma<u16>, Vec<u16>>,
+) -> GrayImage {
     let mut img = img.to_luma16();
     for (x, y, pixel) in img.enumerate_pixels_mut() {
         let threshold = matrix.get_pixel(x % matrix.width(), y % matrix.height()).0[0];
@@ -130,5 +133,5 @@ pub fn error_diffusion_quantise(img: &DynamicImage, matrix: &dyn DiffusionMatrix
             }
         }
     }
-    DynamicImage::from(img).into_luma8()
+    DynamicImage::from(img).to_luma8()
 }

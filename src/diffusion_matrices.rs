@@ -72,10 +72,7 @@ pub const SIERRA_TWO_ROW: DiffusionMatrixImpl<2, 5> = DiffusionMatrixImpl {
 
 pub const SIERRA_LITE: DiffusionMatrixImpl<2, 3> = DiffusionMatrixImpl {
     offset: -1,
-    weights: [
-        [None, None, Some(2.0 / 4.0)],
-        [Some(1.0 / 4.0), Some(1.0 / 4.0), None],
-    ],
+    weights: [[None, None, Some(2.0 / 4.0)], [Some(1.0 / 4.0), Some(1.0 / 4.0), None]],
 };
 
 pub const STUCKI: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {

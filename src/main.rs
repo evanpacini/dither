@@ -1,6 +1,6 @@
+use image::codecs::pnm::PnmEncoder;
 use image::codecs::pnm::PnmSubtype::Bitmap;
 use image::codecs::pnm::SampleEncoding::Binary;
-use image::codecs::pnm::PnmEncoder;
 use image::ExtendedColorType::L8;
 use image::{EncodableLayout, ImageEncoder, ImageReader};
 use std::error::Error;
@@ -29,10 +29,21 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Ordered dithering and save
     let threshold_matrices: [&str; 15] = [
-        "bayer/2x2", "bayer/4x4", "bayer/8x8", "bayer/16x16", "bayer/32x32", "bayer/64x64",
-        "bayer/128x128", "bayer/256x256", "blue_noise/16x16/16bpc_0", "blue_noise/32x32/16bpc_0",
-        "blue_noise/64x64/16bpc_0", "blue_noise/128x128/16bpc_0", "blue_noise/256x256/16bpc_0",
-        "blue_noise/512x512/8bpc_0", "blue_noise/1024x1024/8bpc_0"
+        "bayer/2x2",
+        "bayer/4x4",
+        "bayer/8x8",
+        "bayer/16x16",
+        "bayer/32x32",
+        "bayer/64x64",
+        "bayer/128x128",
+        "bayer/256x256",
+        "blue_noise/16x16/16bpc_0",
+        "blue_noise/32x32/16bpc_0",
+        "blue_noise/64x64/16bpc_0",
+        "blue_noise/128x128/16bpc_0",
+        "blue_noise/256x256/16bpc_0",
+        "blue_noise/512x512/8bpc_0",
+        "blue_noise/1024x1024/8bpc_0",
     ];
     for matrix in threshold_matrices {
         let matrix_img = image::open(format!("textures/{matrix}.png"))?.into_luma16();
