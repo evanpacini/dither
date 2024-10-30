@@ -2,72 +2,6 @@ use image::{DynamicImage, GenericImageView, GrayImage, ImageBuffer, Luma};
 
 pub mod diffusion_matrices;
 
-// BEGIN: Diffusion matrix trait and implementations
-pub trait DiffusionMatrix {
-    fn enumerate(&self) -> Box<dyn EnumerateDiffusionMatrix + '_>;
-}
-
-pub struct DiffusionMatrixImpl<const M: usize, const N: usize> {
-    offset: i32,
-    weights: [[Option<f32>; N]; M],
-}
-
-impl<const M: usize, const N: usize> DiffusionMatrix for DiffusionMatrixImpl<M, N> {
-    fn enumerate(&self) -> Box<dyn EnumerateDiffusionMatrix + '_> {
-        Box::new(EnumerateDiffusionMatrixImpl { matrix: self, x: 0, y: 0 })
-    }
-}
-// END: Diffusion matrix trait and implementations
-
-// BEGIN: EnumerateDiffMatrix trait and implementations
-pub trait EnumerateDiffusionMatrix {
-    fn next_a(&mut self) -> Option<(i32, u32, f32)>;
-}
-
-impl Iterator for Box<dyn EnumerateDiffusionMatrix + '_> {
-    type Item = (i32, u32, f32);
-
-    fn next(&mut self) -> Option<Self::Item> {
-        self.next_a()
-    }
-}
-
-pub struct EnumerateDiffusionMatrixImpl<'a, const M: usize, const N: usize> {
-    matrix: &'a DiffusionMatrixImpl<M, N>,
-    x: usize,
-    y: usize,
-}
-
-impl<const M: usize, const N: usize> EnumerateDiffusionMatrixImpl<'_, M, N> {
-    fn next_weight(&mut self) {
-        self.x += 1;
-        if self.x >= N {
-            self.x = 0;
-            self.y += 1;
-        }
-    }
-}
-
-impl<const M: usize, const N: usize> EnumerateDiffusionMatrix
-for EnumerateDiffusionMatrixImpl<'_, M, N>
-{
-    fn next_a(&mut self) -> Option<(i32, u32, f32)> {
-        loop {
-            if self.y >= M {
-                return None;
-            }
-            if let Some(weight) = self.matrix.weights[self.y][self.x] {
-                let x = self.x as i32 + self.matrix.offset;
-                let y = self.y as u32;
-                self.next_weight();
-                return Some((x, y, weight));
-            }
-            self.next_weight();
-        }
-    }
-}
-// END: EnumerateDiffMatrix trait and implementations
-
 /// Quantise an image to binary (black and white) using a threshold of 128.
 pub fn threshold_quantise(img: &DynamicImage) -> GrayImage {
     let mut img = img.to_luma16();
@@ -113,7 +47,7 @@ pub fn ordered_dither_quantise(
 }
 
 /// Quantise an image to binary (black and white) using error diffusion.
-pub fn error_diffusion_quantise(img: &DynamicImage, matrix: &dyn DiffusionMatrix) -> GrayImage {
+pub fn error_diffusion_quantise(img: &DynamicImage, matrix: &dyn diffusion_matrices::DiffusionMatrix) -> GrayImage {
     let mut img = img.to_luma32f();
     for y in 0..img.height() {
         for x in 0..img.width() {

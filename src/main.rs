@@ -55,7 +55,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     // Error diffusion and save
-    let diffusion_matrices: [(&str, &dyn dither::DiffusionMatrix); 10] = [
+    let diffusion_matrices: [(&str, &dyn dither::diffusion_matrices::DiffusionMatrix); 10] = [
         ("atkinson", &dither::diffusion_matrices::ATKINSON),
         ("burkes", &dither::diffusion_matrices::BURKES),
         ("floyd_steinberg", &dither::diffusion_matrices::FLOYD_STEINBERG),
