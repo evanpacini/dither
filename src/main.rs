@@ -31,10 +31,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     // Ordered dithering and save
-    let ordered_thresholds: [(&str, &dyn ordered_thresholds::OrderedThreshold); 18] = [
+    let ordered_thresholds: [(&str, &dyn ordered_thresholds::OrderedThreshold); 19] = [
         ("flat", &ordered_thresholds::FLAT),
         ("random", &ordered_thresholds::RANDOM),
         ("ign", &ordered_thresholds::IGN),
+        ("r2", &ordered_thresholds::R2),
         ("bayer_2", &image::open("textures/bayer/2x2.png")?.to_luma32f()),
         ("bayer_4", &image::open("textures/bayer/4x4.png")?.to_luma32f()),
         ("bayer_8", &image::open("textures/bayer/8x8.png")?.to_luma32f()),

@@ -53,4 +53,13 @@ pub const RANDOM: fn(u32, u32) -> f32 = |_, _| rand::random::<f32>();
 /// https://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare/
 pub const IGN: fn(u32, u32) -> f32 =
     |x, y| (52.9829189 * 0.06711056_f32.mul_add(x as f32, 0.00583715 * y as f32).fract()).fract();
+
+/// R2 sequence
+/// https://extremelearning.com.au/unreasonable-effectiveness-of-quasirandom-sequences/
+pub const R2: fn(u32, u32) -> f32 = |x, y| {
+    const PHI_2: f32 = 1.32471796;
+    const ALPHA_1: f32 = 1.0 / PHI_2;
+    const ALPHA_2: f32 = 1.0 / (PHI_2 * PHI_2);
+    ALPHA_1.mul_add(x as f32, ALPHA_2 * y as f32).fract()
+};
 // END: Define threshold functions
