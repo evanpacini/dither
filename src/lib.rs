@@ -1,53 +1,12 @@
-use image::{DynamicImage, GenericImageView, GrayImage, ImageBuffer, Luma};
+use image::{DynamicImage, GenericImageView, GrayImage, Luma};
 
 pub mod diffusion_matrices;
-
-/// Quantise an image to binary (black and white) using a threshold of 128.
-pub fn threshold_quantise(img: &DynamicImage) -> GrayImage {
-    let mut img = img.to_luma16();
-    for pixel in img.pixels_mut() {
-        pixel.0[0] = if pixel.0[0] < 32768 { 0 } else { 65535 };
-    }
-    DynamicImage::ImageLuma16(img).to_luma8()
-}
-
-/// Quantise an image to binary (black and white) using a random threshold. (Random dithering)
-pub fn random_dither_quantise(img: &DynamicImage) -> GrayImage {
-    let mut img = img.to_luma16();
-    for pixel in img.pixels_mut() {
-        let threshold = rand::random::<u16>();
-        pixel.0[0] = if pixel.0[0] < threshold { 0 } else { 65535 };
-    }
-    DynamicImage::ImageLuma16(img).to_luma8()
-}
-
-/// Quantise an image to binary (black and white) using IGN threshold.
-pub fn ign_quantise(img: &DynamicImage) -> GrayImage {
-    let mut img = img.to_luma16();
-    for (x, y, pixel) in img.enumerate_pixels_mut() {
-        let threshold =
-            ((52.9829189 * 0.06711056_f32.mul_add(x as f32, 0.00583715 * y as f32).fract()).fract()
-                * 65535.0)
-                .round() as u16;
-        pixel.0[0] = if pixel.0[0] < threshold { 0 } else { 65535 };
-    }
-    DynamicImage::ImageLuma16(img).to_luma8()
-}
-
-/// Quantise an image to binary (black and white) using ordered dithering.
-pub fn ordered_dither_quantise(
-    img: &DynamicImage, matrix: &ImageBuffer<Luma<u16>, Vec<u16>>,
-) -> GrayImage {
-    let mut img = img.to_luma16();
-    for (x, y, pixel) in img.enumerate_pixels_mut() {
-        let threshold = matrix.get_pixel(x % matrix.width(), y % matrix.height()).0[0];
-        pixel.0[0] = if pixel.0[0] < threshold { 0 } else { 65535 };
-    }
-    DynamicImage::ImageLuma16(img).to_luma8()
-}
+pub mod ordered_thresholds;
 
 /// Quantise an image to binary (black and white) using error diffusion.
-pub fn error_diffusion_quantise(img: &DynamicImage, matrix: &dyn diffusion_matrices::DiffusionMatrix) -> GrayImage {
+pub fn error_diffusion_quantise(
+    img: &DynamicImage, matrix: &dyn diffusion_matrices::DiffusionMatrix,
+) -> GrayImage {
     let mut img = img.to_luma32f();
     for y in 0..img.height() {
         for x in 0..img.width() {
@@ -66,6 +25,17 @@ pub fn error_diffusion_quantise(img: &DynamicImage, matrix: &dyn diffusion_matri
                 img.put_pixel(nx, ny, Luma([new_pixel]));
             }
         }
+    }
+    DynamicImage::from(img).to_luma8()
+}
+
+/// Quantise an image to binary (black and white) using ordered dithering.
+pub fn ordered_dither_quantise(
+    img: &DynamicImage, thresh: &dyn ordered_thresholds::OrderedThreshold,
+) -> GrayImage {
+    let mut img = img.to_luma32f();
+    for (x, y, pixel) in img.enumerate_pixels_mut() {
+        pixel.0[0] = if pixel.0[0] < thresh.get(x, y) { 0.0 } else { 1.0 };
     }
     DynamicImage::from(img).to_luma8()
 }
