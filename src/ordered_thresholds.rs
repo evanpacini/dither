@@ -62,4 +62,10 @@ pub const R2: fn(u32, u32) -> f32 = |x, y| {
     const ALPHA_2: f32 = 1.0 / (PHI_2 * PHI_2);
     ALPHA_1.mul_add(x as f32, ALPHA_2 * y as f32).fract()
 };
+
+/// a_dither pattern 1 https://pippin.gimp.org/a_dither/
+pub const A_DITHER_1: fn(u32, u32) -> f32 = |x, y| ((x ^ y * 149) * 1234 & 511) as f32 / 511.0;
+
+/// a_dither pattern 3 https://pippin.gimp.org/a_dither/
+pub const A_DITHER_3: fn(u32, u32) -> f32 = |x, y| ((x + y * 237) * 119 & 255) as f32 / 255.0;
 // END: Define threshold functions
