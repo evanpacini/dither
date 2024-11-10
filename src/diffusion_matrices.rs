@@ -65,6 +65,7 @@ for EnumerateDiffusionMatrixImpl<'_, M, N>
 // END: EnumerateDiffMatrix trait and implementations
 
 // BEGIN: Diffusion matrices
+/// Atkinson, W.D. (1984). Revealed in a private correspondence with John Balestrieri in January 2003 (unpublished).
 pub const ATKINSON: DiffusionMatrixImpl<3, 4> = DiffusionMatrixImpl {
     offset: -1,
     weights: [
@@ -74,6 +75,9 @@ pub const ATKINSON: DiffusionMatrixImpl<3, 4> = DiffusionMatrixImpl {
     ],
 };
 
+/// Burkes, D. (1988). _Presentation of the Burkes error filter for use in preparing continuous-tone
+/// images for presentation on bi-level devices._
+/// In LIB 15 (Publications), CIS Graphics Support Forum. (unpublished).
 pub const BURKES: DiffusionMatrixImpl<2, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
@@ -82,6 +86,8 @@ pub const BURKES: DiffusionMatrixImpl<2, 5> = DiffusionMatrixImpl {
     ],
 };
 
+/// Floyd, R.W. & Steinberg, L. (1975). _An adaptive algorithm for spatial grey scale._
+/// Society of Information Display Symposium, Digest of Technical Papers, 36–37.
 pub const FLOYD_STEINBERG: DiffusionMatrixImpl<2, 3> = DiffusionMatrixImpl {
     offset: -1,
     weights: [
@@ -90,6 +96,9 @@ pub const FLOYD_STEINBERG: DiffusionMatrixImpl<2, 3> = DiffusionMatrixImpl {
     ],
 };
 
+/// Jarvis, J., Judice, C., & Ninke, W. (1976). _A survey of techniques for the display of continuous
+/// tone pictures on bilevel displays._ Computer Graphics and Image Processing, 5(1), 13–40.
+/// https://doi.org/10.1016/s0146-664x(76)80003-2
 pub const JARVIS_JUDICE_NINKE: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
@@ -99,7 +108,8 @@ pub const JARVIS_JUDICE_NINKE: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     ],
 };
 
-// https://hbfs.wordpress.com/2013/12/31/dithering/
+/// Pigeon, S. (2013). _Dithering._ Harder, Better, Faster, Stronger.
+/// https://hbfs.wordpress.com/2013/12/31/dithering/
 pub const PIGEON: DiffusionMatrixImpl<2, 4> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
@@ -108,7 +118,9 @@ pub const PIGEON: DiffusionMatrixImpl<2, 4> = DiffusionMatrixImpl {
     ],
 };
 
-// https://doi-org.tudelft.idm.oclc.org/10.1117/12.236968
+/// Shiau, J., & Fan, Z. (1996). _Set of easily implementable coefficients in error diffusion with reduced worm artifacts._
+/// Proceedings of SPIE 2658, Color Imaging: Device-Independent Color, Color Hard Copy, and Graphic Arts,
+/// https://doi.org/10.1117/12.236968
 pub const SHIAU_FAN: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
@@ -118,6 +130,7 @@ pub const SHIAU_FAN: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     ],
 };
 
+/// Sierra, F. (1989). In LIB 17 (Developer's Den), CIS Graphics Support Forum (unpublished).
 pub const SIERRA: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
@@ -127,6 +140,7 @@ pub const SIERRA: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     ],
 };
 
+/// Sierra, F. (1990). In LIB 17 (Developer's Den), CIS Graphics Support Forum (unpublished).
 pub const SIERRA_TWO_ROW: DiffusionMatrixImpl<2, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
@@ -135,11 +149,14 @@ pub const SIERRA_TWO_ROW: DiffusionMatrixImpl<2, 5> = DiffusionMatrixImpl {
     ],
 };
 
+/// Sierra, F. (1990). In LIB 17 (Developer's Den), CIS Graphics Support Forum (unpublished).
 pub const SIERRA_LITE: DiffusionMatrixImpl<2, 3> = DiffusionMatrixImpl {
     offset: -1,
     weights: [[None, None, Some(2.0 / 4.0)], [Some(1.0 / 4.0), Some(1.0 / 4.0), None]],
 };
 
+/// Stucki, P. (1981). _MECCA - A Multiple-Error Correction Computation Algorithm for Bi-Level Image Hardcopy Reproduction._
+/// Research Report RZ1060, IBM Zurich Research Laboratory.
 pub const STUCKI: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [

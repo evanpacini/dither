@@ -49,23 +49,23 @@ pub const FLAT: fn(u32, u32) -> f32 = |_, _| 0.5;
 /// Random threshold
 pub const RANDOM: fn(u32, u32) -> f32 = |_, _| rand::random::<f32>();
 
-/// Interleaved Gradient Noise (IGN) threshold
+/// Kolås, Ø. (2013). _a dither._ Pattern 1 https://pippin.gimp.org/a_dither/
+pub const A_DITHER_1: fn(u32, u32) -> f32 = |x, y| ((x ^ y * 149) * 1234 & 511) as f32 / 511.0;
+
+/// Kolås, Ø. (2013). _a dither._ Pattern 3 https://pippin.gimp.org/a_dither/
+pub const A_DITHER_3: fn(u32, u32) -> f32 = |x, y| ((x + y * 237) * 119 & 255) as f32 / 255.0;
+
+/// Jimenez, J. (2014). _Next generation Post Processing in Call of Duty: Advanced Warfare._
+/// In SIGGRAPH 2014, Advances in Real-Time Rendering in Games: Part I.
 /// https://www.iryoku.com/next-generation-post-processing-in-call-of-duty-advanced-warfare/
 pub const IGN: fn(u32, u32) -> f32 =
     |x, y| (52.9829189 * 0.06711056_f32.mul_add(x as f32, 0.00583715 * y as f32).fract()).fract();
 
-/// R2 sequence
-/// https://extremelearning.com.au/unreasonable-effectiveness-of-quasirandom-sequences/
+/// Roberts, M. (2018). _The Unreasonable Effectiveness of Quasirandom Sequences._ Extreme Learning. https://extremelearning.com.au/unreasonable-effectiveness-of-quasirandom-sequences/
 pub const R2: fn(u32, u32) -> f32 = |x, y| {
     const PHI_2: f32 = 1.32471796;
     const ALPHA_1: f32 = 1.0 / PHI_2;
     const ALPHA_2: f32 = 1.0 / (PHI_2 * PHI_2);
     ALPHA_1.mul_add(x as f32, ALPHA_2 * y as f32).fract()
 };
-
-/// a_dither pattern 1 https://pippin.gimp.org/a_dither/
-pub const A_DITHER_1: fn(u32, u32) -> f32 = |x, y| ((x ^ y * 149) * 1234 & 511) as f32 / 511.0;
-
-/// a_dither pattern 3 https://pippin.gimp.org/a_dither/
-pub const A_DITHER_3: fn(u32, u32) -> f32 = |x, y| ((x + y * 237) * 119 & 255) as f32 / 255.0;
 // END: Define threshold functions
