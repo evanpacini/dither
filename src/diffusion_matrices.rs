@@ -45,7 +45,7 @@ impl<const M: usize, const N: usize> EnumerateDiffusionMatrixImpl<'_, M, N> {
 }
 
 impl<const M: usize, const N: usize> EnumerateDiffusionMatrix
-for EnumerateDiffusionMatrixImpl<'_, M, N>
+    for EnumerateDiffusionMatrixImpl<'_, M, N>
 {
     fn next_a(&mut self) -> Option<(i32, u32, f32)> {
         loop {
@@ -86,6 +86,15 @@ pub const BURKES: DiffusionMatrixImpl<2, 5> = DiffusionMatrixImpl {
     ],
 };
 
+/// Fan, Z. (1991). _A Simple Modification of Error Diffusion Weights._ IS&T's 44th Annual Conference
+pub const FAN: DiffusionMatrixImpl<2, 4> = DiffusionMatrixImpl {
+    offset: -2,
+    weights: [
+        [None, None, None, Some(7.0 / 16.0)],
+        [Some(1.0 / 16.0), Some(3.0 / 16.0), Some(5.0 / 16.0), None],
+    ],
+};
+
 /// Floyd, R.W. & Steinberg, L. (1975). _An adaptive algorithm for spatial grey scale._
 /// Society of Information Display Symposium, Digest of Technical Papers, 36–37.
 pub const FLOYD_STEINBERG: DiffusionMatrixImpl<2, 3> = DiffusionMatrixImpl {
@@ -110,23 +119,23 @@ pub const JARVIS_JUDICE_NINKE: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
 
 /// Pigeon, S. (2013). _Dithering._ Harder, Better, Faster, Stronger.
 /// https://hbfs.wordpress.com/2013/12/31/dithering/
-pub const PIGEON: DiffusionMatrixImpl<2, 4> = DiffusionMatrixImpl {
+pub const PIGEON: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
-        [None, None, None, Some(7.0 / 16.0)],
-        [Some(1.0 / 16.0), Some(3.0 / 16.0), Some(5.0 / 16.0), None],
+        [None, None, None, Some(2.0 / 14.0), Some(1.0 / 14.0)],
+        [None, Some(2.0 / 14.0), Some(2.0 / 14.0), Some(2.0 / 14.0), None],
+        [Some(1.0 / 14.0), None, Some(1.0 / 14.0), None, Some(1.0 / 14.0)],
     ],
 };
 
 /// Shiau, J., & Fan, Z. (1996). _Set of easily implementable coefficients in error diffusion with reduced worm artifacts._
 /// Proceedings of SPIE 2658, Color Imaging: Device-Independent Color, Color Hard Copy, and Graphic Arts,
 /// https://doi.org/10.1117/12.236968
-pub const SHIAU_FAN: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
-    offset: -2,
+pub const SHIAU_FAN: DiffusionMatrixImpl<2, 5> = DiffusionMatrixImpl {
+    offset: -3,
     weights: [
-        [None, None, None, Some(8.0 / 48.0), Some(4.0 / 48.0)],
-        [Some(2.0 / 48.0), Some(4.0 / 48.0), Some(8.0 / 48.0), Some(4.0 / 48.0), Some(2.0 / 48.0)],
-        [None, Some(2.0 / 48.0), Some(4.0 / 48.0), Some(2.0 / 48.0), None],
+        [None, None, None, None, Some(8.0 / 16.0)],
+        [Some(1.0 / 16.0), Some(1.0 / 16.0), Some(2.0 / 16.0), Some(4.0 / 16.0), None],
     ],
 };
 
