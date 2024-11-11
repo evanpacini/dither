@@ -5,7 +5,7 @@ pub trait DiffusionMatrix {
 
 pub struct DiffusionMatrixImpl<const M: usize, const N: usize> {
     offset: i32,
-    weights: [[Option<f32>; N]; M],
+    weights: [[f32; N]; M],
 }
 
 impl<const M: usize, const N: usize> DiffusionMatrix for DiffusionMatrixImpl<M, N> {
@@ -52,7 +52,8 @@ impl<const M: usize, const N: usize> EnumerateDiffusionMatrix
             if self.y >= M {
                 return None;
             }
-            if let Some(weight) = self.matrix.weights[self.y][self.x] {
+            let weight = self.matrix.weights[self.y][self.x];
+            if weight != 0.0 {
                 let x = self.x as i32 + self.matrix.offset;
                 let y = self.y as u32;
                 self.next_weight();
@@ -69,9 +70,9 @@ impl<const M: usize, const N: usize> EnumerateDiffusionMatrix
 pub const ATKINSON: DiffusionMatrixImpl<3, 4> = DiffusionMatrixImpl {
     offset: -1,
     weights: [
-        [None, None, Some(1.0 / 8.0), Some(1.0 / 8.0)],
-        [Some(1.0 / 8.0), Some(1.0 / 8.0), Some(1.0 / 8.0), None],
-        [None, Some(1.0 / 8.0), None, None],
+        [0., 0., 1.0 / 8.0, 1.0 / 8.0],
+        [1.0 / 8.0, 1.0 / 8.0, 1.0 / 8.0, 0.],
+        [0., 1.0 / 8.0, 0., 0.],
     ],
 };
 
@@ -81,28 +82,22 @@ pub const ATKINSON: DiffusionMatrixImpl<3, 4> = DiffusionMatrixImpl {
 pub const BURKES: DiffusionMatrixImpl<2, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
-        [None, None, None, Some(8.0 / 32.0), Some(4.0 / 32.0)],
-        [Some(2.0 / 32.0), Some(4.0 / 32.0), Some(8.0 / 32.0), Some(4.0 / 32.0), Some(2.0 / 32.0)],
+        [0., 0., 0., 8.0 / 32.0, 4.0 / 32.0],
+        [2.0 / 32.0, 4.0 / 32.0, 8.0 / 32.0, 4.0 / 32.0, 2.0 / 32.0],
     ],
 };
 
 /// Fan, Z. (1991). _A Simple Modification of Error Diffusion Weights._ IS&T's 44th Annual Conference
 pub const FAN: DiffusionMatrixImpl<2, 4> = DiffusionMatrixImpl {
     offset: -2,
-    weights: [
-        [None, None, None, Some(7.0 / 16.0)],
-        [Some(1.0 / 16.0), Some(3.0 / 16.0), Some(5.0 / 16.0), None],
-    ],
+    weights: [[0., 0., 0., 7.0 / 16.0], [1.0 / 16.0, 3.0 / 16.0, 5.0 / 16.0, 0.]],
 };
 
 /// Floyd, R.W. & Steinberg, L. (1975). _An adaptive algorithm for spatial grey scale._
 /// Society of Information Display Symposium, Digest of Technical Papers, 36–37.
 pub const FLOYD_STEINBERG: DiffusionMatrixImpl<2, 3> = DiffusionMatrixImpl {
     offset: -1,
-    weights: [
-        [None, None, Some(7.0 / 16.0)],
-        [Some(3.0 / 16.0), Some(5.0 / 16.0), Some(1.0 / 16.0)],
-    ],
+    weights: [[0., 0., 7.0 / 16.0], [3.0 / 16.0, 5.0 / 16.0, 1.0 / 16.0]],
 };
 
 /// Jarvis, J., Judice, C., & Ninke, W. (1976). _A survey of techniques for the display of continuous
@@ -111,9 +106,9 @@ pub const FLOYD_STEINBERG: DiffusionMatrixImpl<2, 3> = DiffusionMatrixImpl {
 pub const JARVIS_JUDICE_NINKE: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
-        [None, None, None, Some(7.0 / 48.0), Some(5.0 / 48.0)],
-        [Some(3.0 / 48.0), Some(5.0 / 48.0), Some(7.0 / 48.0), Some(5.0 / 48.0), Some(3.0 / 48.0)],
-        [Some(1.0 / 48.0), Some(3.0 / 48.0), Some(5.0 / 48.0), Some(3.0 / 48.0), Some(1.0 / 48.0)],
+        [0., 0., 0., 7.0 / 48.0, 5.0 / 48.0],
+        [3.0 / 48.0, 5.0 / 48.0, 7.0 / 48.0, 5.0 / 48.0, 3.0 / 48.0],
+        [1.0 / 48.0, 3.0 / 48.0, 5.0 / 48.0, 3.0 / 48.0, 1.0 / 48.0],
     ],
 };
 
@@ -122,9 +117,9 @@ pub const JARVIS_JUDICE_NINKE: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
 pub const PIGEON: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
-        [None, None, None, Some(2.0 / 14.0), Some(1.0 / 14.0)],
-        [None, Some(2.0 / 14.0), Some(2.0 / 14.0), Some(2.0 / 14.0), None],
-        [Some(1.0 / 14.0), None, Some(1.0 / 14.0), None, Some(1.0 / 14.0)],
+        [0., 0., 0., 2.0 / 14.0, 1.0 / 14.0],
+        [0., 2.0 / 14.0, 2.0 / 14.0, 2.0 / 14.0, 0.],
+        [1.0 / 14.0, 0., 1.0 / 14.0, 0., 1.0 / 14.0],
     ],
 };
 
@@ -133,19 +128,16 @@ pub const PIGEON: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
 /// https://doi.org/10.1117/12.236968
 pub const SHIAU_FAN: DiffusionMatrixImpl<2, 5> = DiffusionMatrixImpl {
     offset: -3,
-    weights: [
-        [None, None, None, None, Some(8.0 / 16.0)],
-        [Some(1.0 / 16.0), Some(1.0 / 16.0), Some(2.0 / 16.0), Some(4.0 / 16.0), None],
-    ],
+    weights: [[0., 0., 0., 0., 8.0 / 16.0], [1.0 / 16.0, 1.0 / 16.0, 2.0 / 16.0, 4.0 / 16.0, 0.]],
 };
 
 /// Sierra, F. (1989). In LIB 17 (Developer's Den), CIS Graphics Support Forum (unpublished).
 pub const SIERRA: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
-        [None, None, None, Some(5.0 / 32.0), Some(3.0 / 32.0)],
-        [Some(2.0 / 32.0), Some(4.0 / 32.0), Some(5.0 / 32.0), Some(4.0 / 32.0), Some(2.0 / 32.0)],
-        [None, Some(2.0 / 32.0), Some(3.0 / 32.0), Some(2.0 / 32.0), None],
+        [0., 0., 0., 5.0 / 32.0, 3.0 / 32.0],
+        [2.0 / 32.0, 4.0 / 32.0, 5.0 / 32.0, 4.0 / 32.0, 2.0 / 32.0],
+        [0., 2.0 / 32.0, 3.0 / 32.0, 2.0 / 32.0, 0.],
     ],
 };
 
@@ -153,25 +145,23 @@ pub const SIERRA: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
 pub const SIERRA_TWO_ROW: DiffusionMatrixImpl<2, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
-        [None, None, None, Some(4.0 / 16.0), Some(3.0 / 16.0)],
-        [Some(1.0 / 16.0), Some(2.0 / 16.0), Some(3.0 / 16.0), Some(2.0 / 16.0), Some(1.0 / 16.0)],
+        [0., 0., 0., 4.0 / 16.0, 3.0 / 16.0],
+        [1.0 / 16.0, 2.0 / 16.0, 3.0 / 16.0, 2.0 / 16.0, 1.0 / 16.0],
     ],
 };
 
 /// Sierra, F. (1990). In LIB 17 (Developer's Den), CIS Graphics Support Forum (unpublished).
-pub const SIERRA_LITE: DiffusionMatrixImpl<2, 3> = DiffusionMatrixImpl {
-    offset: -1,
-    weights: [[None, None, Some(2.0 / 4.0)], [Some(1.0 / 4.0), Some(1.0 / 4.0), None]],
-};
+pub const SIERRA_LITE: DiffusionMatrixImpl<2, 3> =
+    DiffusionMatrixImpl { offset: -1, weights: [[0., 0., 2.0 / 4.0], [1.0 / 4.0, 1.0 / 4.0, 0.]] };
 
 /// Stucki, P. (1981). _MECCA - A Multiple-Error Correction Computation Algorithm for Bi-Level Image Hardcopy Reproduction._
 /// Research Report RZ1060, IBM Zurich Research Laboratory.
 pub const STUCKI: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
-        [None, None, None, Some(8.0 / 42.0), Some(4.0 / 42.0)],
-        [Some(2.0 / 42.0), Some(4.0 / 42.0), Some(8.0 / 42.0), Some(4.0 / 42.0), Some(2.0 / 42.0)],
-        [Some(1.0 / 42.0), Some(2.0 / 42.0), Some(4.0 / 42.0), Some(2.0 / 42.0), Some(1.0 / 42.0)],
+        [0., 0., 0., 8.0 / 42.0, 4.0 / 42.0],
+        [2.0 / 42.0, 4.0 / 42.0, 8.0 / 42.0, 4.0 / 42.0, 2.0 / 42.0],
+        [1.0 / 42.0, 2.0 / 42.0, 4.0 / 42.0, 2.0 / 42.0, 1.0 / 42.0],
     ],
 };
 // END: Diffusion matrices
