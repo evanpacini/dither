@@ -25,10 +25,21 @@ fn main() -> Result<(), Box<dyn Error>> {
         ("stucki", &diffusion_matrices::STUCKI),
     ];
     for (name, matrix) in diffusion_matrices {
-        let err_img = dither::error_diffusion_quantise(&in_img, matrix);
-        PnmEncoder::new(std::fs::File::create(format!("output/lena_ed_{}.pbm", name))?)
-            .with_subtype(Bitmap(Binary))
-            .write_image(err_img.as_bytes(), err_img.width(), err_img.height(), L8)?;
+        for serpentine in &[false, true] {
+            let err_img = dither::error_diffusion_quantise(&in_img, matrix, *serpentine);
+            PnmEncoder::new(std::fs::File::create(format!(
+                "output/lena_ed_{}{}.pbm",
+                name,
+                if *serpentine { "_serpentine" } else { "" }
+            ))?)
+                .with_subtype(Bitmap(Binary))
+                .write_image(
+                    err_img.as_bytes(),
+                    err_img.width(),
+                    err_img.height(),
+                    L8,
+                )?;
+        }
     }
 
     // Ordered dithering and save
