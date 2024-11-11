@@ -11,9 +11,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     let in_img = ImageReader::open("input/lena.ppm")?.decode()?;
 
     // Error diffusion and save
-    let diffusion_matrices: [(&str, &dyn diffusion_matrices::DiffusionMatrix); 10] = [
+    let diffusion_matrices: [(&str, &dyn diffusion_matrices::DiffusionMatrix); 11] = [
         ("atkinson", &diffusion_matrices::ATKINSON),
         ("burkes", &diffusion_matrices::BURKES),
+        ("fan", &diffusion_matrices::FAN),
         ("floyd_steinberg", &diffusion_matrices::FLOYD_STEINBERG),
         ("jarvis_judice_ninke", &diffusion_matrices::JARVIS_JUDICE_NINKE),
         ("pigeon", &diffusion_matrices::PIGEON),
