@@ -45,7 +45,7 @@ impl<const M: usize, const N: usize> EnumerateDiffusionMatrixImpl<'_, M, N> {
 }
 
 impl<const M: usize, const N: usize> EnumerateDiffusionMatrix
-    for EnumerateDiffusionMatrixImpl<'_, M, N>
+for EnumerateDiffusionMatrixImpl<'_, M, N>
 {
     fn next_a(&mut self) -> Option<(i32, u32, f32)> {
         loop {
@@ -93,6 +93,38 @@ pub const FAN: DiffusionMatrixImpl<2, 4> = DiffusionMatrixImpl {
     weights: [[0., 0., 0., 7.0 / 16.0], [1.0 / 16.0, 3.0 / 16.0, 5.0 / 16.0, 0.]],
 };
 
+/// Fedoseev, V. (2015). _Kernel weights optimization for error diffusion halftoning method_
+/// Proceedings of SPIE 9445, Seventh International Conference on Machine Vision (ICMV 2014);
+/// https://doi.org/10.1117/12.2180540
+pub const FEDOSEEV_15: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
+    offset: -2,
+    weights: [
+        [0., 0., 0., 0.5423, 0.0533],
+        [0.0246, 0.2191, 0.4715, -0.0023, -0.1241],
+        [-0.0065, -0.0692, 0.0168, -0.0952, -0.0304],
+    ],
+};
+pub const FEDOSEEV_16: DiffusionMatrixImpl<2, 2> =
+    DiffusionMatrixImpl { offset: 0, weights: [[0., 0.4364], [0.5636, 0.]] };
+pub const FEDOSEEV_17: DiffusionMatrixImpl<2, 3> =
+    DiffusionMatrixImpl { offset: -1, weights: [[0., 0., 0.4473], [0.1654, 0.3872, 0.]] };
+pub const FEDOSEEV_18: DiffusionMatrixImpl<3, 3> = DiffusionMatrixImpl {
+    offset: -1,
+    weights: [[0., 0., 0.5221], [0.1854, 0.4689, 0.], [0., 0., -0.1763]],
+};
+pub const FEDOSEEV_19: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
+    offset: -2,
+    weights: [
+        [0., 0., 0., 0.5, 0.0625],
+        [0.015625, 0.25, 0.5, -0.001953125, -0.125],
+        [-0.00390625, -0.0625, 0.015625, -0.125, -0.03125],
+    ],
+};
+pub const FEDOSEEV_20: DiffusionMatrixImpl<3, 3> = DiffusionMatrixImpl {
+    offset: -1,
+    weights: [[0., 0., 0.5], [0.125, 0.5, 0.], [0., 0., -0.125]],
+};
+
 /// Floyd, R.W. & Steinberg, L. (1975). _An adaptive algorithm for spatial grey scale._
 /// Society of Information Display Symposium, Digest of Technical Papers, 36–37.
 pub const FLOYD_STEINBERG: DiffusionMatrixImpl<2, 3> = DiffusionMatrixImpl {
@@ -124,7 +156,7 @@ pub const PIGEON: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
 };
 
 /// Shiau, J., & Fan, Z. (1996). _Set of easily implementable coefficients in error diffusion with reduced worm artifacts._
-/// Proceedings of SPIE 2658, Color Imaging: Device-Independent Color, Color Hard Copy, and Graphic Arts,
+/// Proceedings of SPIE 2658, Color Imaging: Device-Independent Color, Color Hard Copy, and Graphic Arts;
 /// https://doi.org/10.1117/12.236968
 pub const SHIAU_FAN: DiffusionMatrixImpl<2, 5> = DiffusionMatrixImpl {
     offset: -3,
@@ -140,8 +172,6 @@ pub const SIERRA: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
         [0., 2.0 / 32.0, 3.0 / 32.0, 2.0 / 32.0, 0.],
     ],
 };
-
-/// Sierra, F. (1990). In LIB 17 (Developer's Den), CIS Graphics Support Forum (unpublished).
 pub const SIERRA_TWO_ROW: DiffusionMatrixImpl<2, 5> = DiffusionMatrixImpl {
     offset: -2,
     weights: [
@@ -149,8 +179,6 @@ pub const SIERRA_TWO_ROW: DiffusionMatrixImpl<2, 5> = DiffusionMatrixImpl {
         [1.0 / 16.0, 2.0 / 16.0, 3.0 / 16.0, 2.0 / 16.0, 1.0 / 16.0],
     ],
 };
-
-/// Sierra, F. (1990). In LIB 17 (Developer's Den), CIS Graphics Support Forum (unpublished).
 pub const SIERRA_LITE: DiffusionMatrixImpl<2, 3> =
     DiffusionMatrixImpl { offset: -1, weights: [[0., 0., 2.0 / 4.0], [1.0 / 4.0, 1.0 / 4.0, 0.]] };
 
@@ -164,4 +192,10 @@ pub const STUCKI: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
         [1.0 / 42.0, 2.0 / 42.0, 4.0 / 42.0, 2.0 / 42.0, 1.0 / 42.0],
     ],
 };
+
+/// Wong, P. W., & Allebach, J. P. (1997). _Optimum error-diffusion kernel design_
+/// Proceedings of SPIE 3018,  Color Imaging: Device-Independent Color, Color Hard Copy, and Graphic Arts II;
+/// https://doi.org/10.1117/12.271597
+pub const WONG_ALLEBACH: DiffusionMatrixImpl<2, 3> =
+    DiffusionMatrixImpl { offset: -1, weights: [[0., 0., 0.2911], [0.1373, 0.3457, 0.2258]] };
 // END: Diffusion matrices

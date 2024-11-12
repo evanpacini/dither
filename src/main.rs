@@ -11,10 +11,16 @@ fn main() -> Result<(), Box<dyn Error>> {
     let in_img = ImageReader::open("input/lena.ppm")?.decode()?;
 
     // Error diffusion and save
-    let diffusion_matrices: [(&str, &dyn diffusion_matrices::DiffusionMatrix); 11] = [
+    let diffusion_matrices: [(&str, &dyn diffusion_matrices::DiffusionMatrix); 18] = [
         ("atkinson", &diffusion_matrices::ATKINSON),
         ("burkes", &diffusion_matrices::BURKES),
         ("fan", &diffusion_matrices::FAN),
+        ("fedoseev_15", &diffusion_matrices::FEDOSEEV_15),
+        ("fedoseev_16", &diffusion_matrices::FEDOSEEV_16),
+        ("fedoseev_17", &diffusion_matrices::FEDOSEEV_17),
+        ("fedoseev_18", &diffusion_matrices::FEDOSEEV_18),
+        ("fedoseev_19", &diffusion_matrices::FEDOSEEV_19),
+        ("fedoseev_20", &diffusion_matrices::FEDOSEEV_20),
         ("floyd_steinberg", &diffusion_matrices::FLOYD_STEINBERG),
         ("jarvis_judice_ninke", &diffusion_matrices::JARVIS_JUDICE_NINKE),
         ("pigeon", &diffusion_matrices::PIGEON),
@@ -23,6 +29,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         ("sierra_two_row", &diffusion_matrices::SIERRA_TWO_ROW),
         ("sierra_lite", &diffusion_matrices::SIERRA_LITE),
         ("stucki", &diffusion_matrices::STUCKI),
+        ("wong_allebach", &diffusion_matrices::WONG_ALLEBACH),
     ];
     for (name, matrix) in diffusion_matrices {
         for serpentine in &[false, true] {
@@ -32,13 +39,13 @@ fn main() -> Result<(), Box<dyn Error>> {
                 name,
                 if *serpentine { "_serpentine" } else { "" }
             ))?)
-                .with_subtype(Bitmap(Binary))
-                .write_image(
-                    err_img.as_bytes(),
-                    err_img.width(),
-                    err_img.height(),
-                    L8,
-                )?;
+            .with_subtype(Bitmap(Binary))
+            .write_image(
+                err_img.as_bytes(),
+                err_img.width(),
+                err_img.height(),
+                L8,
+            )?;
         }
     }
 
