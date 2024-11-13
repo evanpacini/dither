@@ -11,7 +11,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let in_img = ImageReader::open("input/lena.ppm")?.decode()?;
 
     // Error diffusion and save
-    let diffusion_matrices: [(&str, &dyn diffusion_matrices::DiffusionMatrix); 18] = [
+    let diffusion_matrices: [(&str, &dyn diffusion_matrices::DiffusionMatrix); 20] = [
         ("atkinson", &diffusion_matrices::ATKINSON),
         ("burkes", &diffusion_matrices::BURKES),
         ("fan", &diffusion_matrices::FAN),
@@ -23,6 +23,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         ("fedoseev_20", &diffusion_matrices::FEDOSEEV_20),
         ("floyd_steinberg", &diffusion_matrices::FLOYD_STEINBERG),
         ("jarvis_judice_ninke", &diffusion_matrices::JARVIS_JUDICE_NINKE),
+        ("kolpatzik_bouman_lum", &diffusion_matrices::KOLPATZIK_BOUMAN_LUMINANCE),
+        ("kolpatzik_bouman_chrom", &diffusion_matrices::KOLPATZIK_BOUMAN_CHROMINANCE),
         ("pigeon", &diffusion_matrices::PIGEON),
         ("shiau_fan", &diffusion_matrices::SHIAU_FAN),
         ("sierra", &diffusion_matrices::SIERRA),
@@ -39,13 +41,13 @@ fn main() -> Result<(), Box<dyn Error>> {
                 name,
                 if *serpentine { "_serpentine" } else { "" }
             ))?)
-            .with_subtype(Bitmap(Binary))
-            .write_image(
-                err_img.as_bytes(),
-                err_img.width(),
-                err_img.height(),
-                L8,
-            )?;
+                .with_subtype(Bitmap(Binary))
+                .write_image(
+                    err_img.as_bytes(),
+                    err_img.width(),
+                    err_img.height(),
+                    L8,
+                )?;
         }
     }
 

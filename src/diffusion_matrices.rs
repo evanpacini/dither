@@ -144,6 +144,13 @@ pub const JARVIS_JUDICE_NINKE: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
     ],
 };
 
+/// Kolpatzik, B.W. & Bouman, C.A. (1992). _Optimized error diffusion for image display_
+/// Journal of Electronic Imaging, 1(3). https://doi.org/10.1117/12.232863
+pub const KOLPATZIK_BOUMAN_LUMINANCE: DiffusionMatrixImpl<2, 3> =
+    DiffusionMatrixImpl { offset: -1, weights: [[0., 0., 0.777], [-0.009, 0.7861, -0.6098]] };
+pub const KOLPATZIK_BOUMAN_CHROMINANCE: DiffusionMatrixImpl<2, 3> =
+    DiffusionMatrixImpl { offset: -1, weights: [[0., 0., 0.8767], [0.0359, 0.8205, -0.7376]] };
+
 /// Pigeon, S. (2013). _Dithering._ Harder, Better, Faster, Stronger.
 /// https://hbfs.wordpress.com/2013/12/31/dithering/
 pub const PIGEON: DiffusionMatrixImpl<3, 5> = DiffusionMatrixImpl {
