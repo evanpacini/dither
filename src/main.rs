@@ -1,14 +1,14 @@
 use dither::{diffusion_matrices, ordered_thresholds};
+use image::ExtendedColorType::L8;
 use image::codecs::pnm::PnmEncoder;
 use image::codecs::pnm::PnmSubtype::Bitmap;
 use image::codecs::pnm::SampleEncoding::Binary;
-use image::ExtendedColorType::L8;
 use image::{EncodableLayout, ImageEncoder, ImageReader};
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {
     // Load image
-    let in_img = ImageReader::open("input/lena.ppm")?.decode()?;
+    let in_img = ImageReader::open("input/lena.png")?.decode()?;
 
     // Error diffusion and save
     let diffusion_matrices: [(&str, &dyn diffusion_matrices::DiffusionMatrix); 20] = [
@@ -41,13 +41,13 @@ fn main() -> Result<(), Box<dyn Error>> {
                 name,
                 if *serpentine { "_serpentine" } else { "" }
             ))?)
-                .with_subtype(Bitmap(Binary))
-                .write_image(
-                    err_img.as_bytes(),
-                    err_img.width(),
-                    err_img.height(),
-                    L8,
-                )?;
+            .with_subtype(Bitmap(Binary))
+            .write_image(
+                err_img.as_bytes(),
+                err_img.width(),
+                err_img.height(),
+                L8,
+            )?;
         }
     }
 

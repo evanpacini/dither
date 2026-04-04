@@ -8,6 +8,7 @@ pub fn error_diffusion_quantise(
     img: &DynamicImage, matrix: &dyn diffusion_matrices::DiffusionMatrix, serpentine: bool,
 ) -> GrayImage {
     let mut img = img.to_luma32f();
+    let mut res = GrayImage::new(img.width(), img.height());
     let mut reversed = false;
     for y in 0..img.height() {
         for x in 0..img.width() {
@@ -16,6 +17,7 @@ pub fn error_diffusion_quantise(
             let new_pixel = if old_pixel < 0.5 { 0.0 } else { 1.0 };
             let error = old_pixel - new_pixel;
             img.put_pixel(x, y, Luma([new_pixel]));
+            res.put_pixel(x, y, Luma([new_pixel as u8]));
             for (dx, dy, weight) in matrix.enumerate() {
                 let nx = x.wrapping_add_signed(if reversed { -dx } else { dx });
                 let ny = y + dy;
@@ -29,16 +31,16 @@ pub fn error_diffusion_quantise(
         }
         reversed = serpentine && !reversed;
     }
-    DynamicImage::from(img).to_luma8()
+    res
 }
 
 /// Quantise an image to binary (black and white) using ordered dithering.
 pub fn ordered_dither_quantise(
     img: &DynamicImage, thresh: &dyn ordered_thresholds::OrderedThreshold,
 ) -> GrayImage {
-    let mut img = img.to_luma32f();
-    for (x, y, pixel) in img.enumerate_pixels_mut() {
-        pixel.0[0] = if pixel.0[0] < thresh.get(x, y) { 0.0 } else { 1.0 };
+    let mut res = GrayImage::new(img.width(), img.height());
+    for (x, y, pixel) in img.to_luma32f().enumerate_pixels() {
+        res.put_pixel(x, y, Luma([(pixel.0[0] >= thresh.get(x, y)) as u8]));
     }
-    DynamicImage::from(img).to_luma8()
+    res
 }

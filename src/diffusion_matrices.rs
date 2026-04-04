@@ -45,7 +45,7 @@ impl<const M: usize, const N: usize> EnumerateDiffusionMatrixImpl<'_, M, N> {
 }
 
 impl<const M: usize, const N: usize> EnumerateDiffusionMatrix
-for EnumerateDiffusionMatrixImpl<'_, M, N>
+    for EnumerateDiffusionMatrixImpl<'_, M, N>
 {
     fn next_a(&mut self) -> Option<(i32, u32, f32)> {
         loop {
